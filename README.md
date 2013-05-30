@@ -1,14 +1,14 @@
-saggy_db_wrapper
+SAGGY DB WRAPPER
 ================
 
 This is the db wrapper that will help to plain php programmer to interact with the databases
 
 
-NOTE :
-# Class  follow Singleton design pattern.
-# Used PDO class to connect to the DB drivers.
-# Have proper exception handling
-# Handles SQL injections.
+#NOTE :
+ - Class  follow Singleton design pattern.
+ - Used PDO class to connect to the DB drivers.
+ - Have proper exception handling
+ - Handles SQL injections.
 
 # Methods for the class :
  - function select (array $Fields)
