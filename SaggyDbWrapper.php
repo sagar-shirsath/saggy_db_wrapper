@@ -2,29 +2,7 @@
 // Database{Mysql} wrapper using php
 require_once "config.php";
 
-interface DbWrapper {
-    public static function getInstance();
-
-    public function select($fields);
-
-    public function from($tableName);
-
-    public function where($conditions);
-
-    public function  limit($limit, $offset);
-
-    public function  orderBy($fieldName, $enum);
-
-    public function get();
-
-    public function query($query);
-
-    public function save($tableName, $setParameters, $conditions);
-
-    public function delete($tableName, $conditions);
-}
-
-class SaggyDbWrapper implements DbWrapper {
+class SaggyDbWrapper {
     private static $hostName;
     private static $userName;
     private static $password;
@@ -96,7 +74,7 @@ class SaggyDbWrapper implements DbWrapper {
                     if (strtoupper($key) == "OR") {
                         $innerCounter = 0;
                         foreach ($value as $orKey => $orValue) {
-                            if (($counter ==0) and (($innerCounter ==0) or ($innerCounter == sizeof($value))))
+                            if (($counter == 0) and (($innerCounter == 0) or ($innerCounter == sizeof($value))))
                                 $whereString .= "";
                             else
                                 $whereString .= " OR ";
@@ -105,7 +83,7 @@ class SaggyDbWrapper implements DbWrapper {
 
                         }
                     } else {
-                        if (($counter ==0) or ($counter == sizeof($conditions)))
+                        if (($counter == 0) or ($counter == sizeof($conditions)))
                             $whereString .= "";
                         else
                             $whereString .= " AND ";
@@ -127,7 +105,10 @@ class SaggyDbWrapper implements DbWrapper {
         return $this;
     }
 
-    public function  orderBy($fieldName, $enum = "ASC") {
+    public function orderBy($fieldName, $enum = "ASC") {
+        if (!empty($fieldName)) {
+            $this->query .= "ORDER BY " . $fieldName . " " . $enum;
+        }
         return $this;
     }
 
@@ -141,14 +122,64 @@ class SaggyDbWrapper implements DbWrapper {
     }
 
     public function query($query) {
-        return $this;
+        $pdoStmt = self::$pdo->query($query);
+        if (!empty($pdoStmt)) {
+            $result = $pdoStmt->fetchAll(PDO::FETCH_ASSOC);
+        }
+        return $result;
     }
 
-    public function getQuery(){
+    public function getQuery() {
         return $this->query;
     }
-    public function save($tableName, $setParameters, $conditions) {
-        return $this;
+
+    public function save($tableName, $setParameters, $conditions = null) {
+        $params = "";
+        $this->query = "";
+        if (!empty($tableName) or !empty($setParameters)) {
+            if (empty($conditions)) {
+
+                if (is_array($setParameters)) {
+                    $keys = join(",", array_keys($setParameters));
+                    $values = "";
+                    foreach (array_values($setParameters) as $key => $val) {
+                        if ($key == sizeof($setParameters) - 1)
+                            $values .= "'" . $val . "'";
+                        else
+                            $values .= "'" . $val . "',";
+                    }
+                    $params = "(" . $keys . ") VALUES (" . $values . ")";
+                } else {
+                    $params = $setParameters;
+                }
+                $this->query = "INSERT INTO " . $tableName . " " . $params;
+            } else {
+                $condition = "Where ";
+                $cnt = 0 ;
+                if (is_array($setParameters)) {
+                    foreach ($setParameters as $key => $val) {
+                        if($cnt++ == sizeof($setParameters)-1)
+                            $params .= $key . "='" . $val."' ";
+                        else
+                            $params .= $key . "='" . $val . "',";
+                    }
+                }else{
+                    $params = $setParameters;
+                }
+                $cndCnt = 0;
+                foreach ($conditions as $key => $val) {
+                    if($cndCnt++ == sizeof($conditions)-1)
+                        $condition .= $key . "='" . $val . "' ";
+                    else
+                        $condition .= $key . "='" . $val . "',";
+                }
+                $this->query = "UPDATE " . $tableName . " SET " . $params . ' ' . $condition;
+            }
+            $pdoStmt = self::$pdo->prepare($this->query);
+            $pdoStmt->execute();
+
+        }
+        return false;
     }
 
     public function delete($tableName, $conditions) {

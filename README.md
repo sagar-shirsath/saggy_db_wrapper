@@ -10,7 +10,7 @@ This is the db wrapper that will help to plain php programmer to interact with t
  - Have proper exception handling
  - Handles SQL injections.
 
-# Methods for the class :
+# Methods :
  - function select (array $Fields)
          : It should accept either a single variable or an array.
  - function from (array $tableNames)
