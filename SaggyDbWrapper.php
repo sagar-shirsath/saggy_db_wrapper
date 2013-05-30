@@ -204,8 +204,13 @@ class SaggyDbWrapper {
             $this->query = "DROP TABLE " . $tableName;
 
         }
+        try{
         $pdoStmt = self::$pdo->prepare($this->query);
         $pdoStmt->execute();
+        }catch(Exception $e){
+            throw new Exception($e);
+
+        }
         return true;
     }
 }

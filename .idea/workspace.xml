@@ -25,7 +25,7 @@
       <file leaf-file-name="SaggyDbWrapper.php" pinned="false" current="true" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/SaggyDbWrapper.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="176" column="13" selection-start="6060" selection-end="6060" vertical-scroll-proportion="0.38356164">
+            <state line="210" column="31" selection-start="7141" selection-end="7141" vertical-scroll-proportion="0.75342464">
               <folding />
             </state>
           </provider>
@@ -34,7 +34,7 @@
       <file leaf-file-name="test.php" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/test.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="16" column="46" selection-start="505" selection-end="505" vertical-scroll-proportion="0.0">
+            <state line="17" column="31" selection-start="543" selection-end="543" vertical-scroll-proportion="0.0">
               <folding />
             </state>
           </provider>
@@ -60,8 +60,8 @@
     <option name="changedFiles">
       <list>
         <option value="$PROJECT_DIR$/README.md" />
-        <option value="$PROJECT_DIR$/test.php" />
         <option value="$PROJECT_DIR$/SaggyDbWrapper.php" />
+        <option value="$PROJECT_DIR$/test.php" />
       </list>
     </option>
   </component>
@@ -223,14 +223,14 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/test.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="16" column="46" selection-start="505" selection-end="505" vertical-scroll-proportion="0.0">
+        <state line="17" column="31" selection-start="543" selection-end="543" vertical-scroll-proportion="0.0">
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/SaggyDbWrapper.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="176" column="13" selection-start="6060" selection-end="6060" vertical-scroll-proportion="0.38356164">
+        <state line="210" column="31" selection-start="7141" selection-end="7141" vertical-scroll-proportion="0.75342464">
           <folding />
         </state>
       </provider>
