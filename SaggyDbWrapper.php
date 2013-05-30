@@ -155,20 +155,20 @@ class SaggyDbWrapper {
                 $this->query = "INSERT INTO " . $tableName . " " . $params;
             } else {
                 $condition = "Where ";
-                $cnt = 0 ;
+                $cnt = 0;
                 if (is_array($setParameters)) {
                     foreach ($setParameters as $key => $val) {
-                        if($cnt++ == sizeof($setParameters)-1)
-                            $params .= $key . "='" . $val."' ";
+                        if ($cnt++ == sizeof($setParameters) - 1)
+                            $params .= $key . "='" . $val . "' ";
                         else
                             $params .= $key . "='" . $val . "',";
                     }
-                }else{
+                } else {
                     $params = $setParameters;
                 }
                 $cndCnt = 0;
                 foreach ($conditions as $key => $val) {
-                    if($cndCnt++ == sizeof($conditions)-1)
+                    if ($cndCnt++ == sizeof($conditions) - 1)
                         $condition .= $key . "='" . $val . "' ";
                     else
                         $condition .= $key . "='" . $val . "',";
@@ -177,13 +177,36 @@ class SaggyDbWrapper {
             }
             $pdoStmt = self::$pdo->prepare($this->query);
             $pdoStmt->execute();
+            return true;
 
         }
         return false;
     }
 
-    public function delete($tableName, $conditions) {
-        return $this;
+    function formatter($conditions, $separator = ",") {
+        $cndCnt = 0;
+        $condition = "";
+        foreach ($conditions as $key => $val) {
+            if ($cndCnt++ == sizeof($conditions) - 1)
+                $condition .= $key . "='" . $val . "' ";
+            else
+                $condition .= $key . "='" . $val . "' " . $separator;
+        }
+        return $condition;
+    }
+
+    public function delete($tableName, $conditions = null) {
+        $this->query = "";
+        if (!empty($conditions)) {
+            $params = $this->formatter($conditions, " AND ");
+            $this->query = "DELETE FROM " . $tableName . " WHERE" . " " . $params;
+        } else if (!empty($tableName)) {
+            $this->query = "DROP TABLE " . $tableName;
+
+        }
+        $pdoStmt = self::$pdo->prepare($this->query);
+        $pdoStmt->execute();
+        return true;
     }
 }
 

@@ -22,19 +22,19 @@
   </component>
   <component name="FileEditorManager">
     <leaf>
-      <file leaf-file-name="SaggyDbWrapper.php" pinned="false" current="false" current-in-tab="false">
+      <file leaf-file-name="SaggyDbWrapper.php" pinned="false" current="true" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/SaggyDbWrapper.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="137" column="26" selection-start="4303" selection-end="4303" vertical-scroll-proportion="0.0">
+            <state line="176" column="13" selection-start="6060" selection-end="6060" vertical-scroll-proportion="0.38356164">
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="test.php" pinned="false" current="true" current-in-tab="true">
+      <file leaf-file-name="test.php" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/test.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="19" column="0" selection-start="477" selection-end="477" vertical-scroll-proportion="0.39041096">
+            <state line="16" column="46" selection-start="505" selection-end="505" vertical-scroll-proportion="0.0">
               <folding />
             </state>
           </provider>
@@ -60,8 +60,8 @@
     <option name="changedFiles">
       <list>
         <option value="$PROJECT_DIR$/README.md" />
-        <option value="$PROJECT_DIR$/SaggyDbWrapper.php" />
         <option value="$PROJECT_DIR$/test.php" />
+        <option value="$PROJECT_DIR$/SaggyDbWrapper.php" />
       </list>
     </option>
   </component>
@@ -221,16 +221,16 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/SaggyDbWrapper.php">
+    <entry file="file://$PROJECT_DIR$/test.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="137" column="26" selection-start="4303" selection-end="4303" vertical-scroll-proportion="0.0">
+        <state line="16" column="46" selection-start="505" selection-end="505" vertical-scroll-proportion="0.0">
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/test.php">
+    <entry file="file://$PROJECT_DIR$/SaggyDbWrapper.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="19" column="0" selection-start="477" selection-end="477" vertical-scroll-proportion="0.39041096">
+        <state line="176" column="13" selection-start="6060" selection-end="6060" vertical-scroll-proportion="0.38356164">
           <folding />
         </state>
       </provider>
