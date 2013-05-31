@@ -15,6 +15,9 @@ This is the db wrapper that will help to plain php programmer to interact with t
          : It should accept either a single variable or an array.
  - function from (array $tableNames)
          : It should accept either a single variable or an array.
+
+    //$conditions format of where condition is like array('first_name'=>'sagar','last_name'=>'shirsath','OR'=>array('id'=>2,'name'=>'sagar'))
+    // specify < , > , <= , >= , <> after the comma in the key e.g. arra('id,<='=>20 , 'salary,>'=>'20000')
  - function where (array $conditions)
          : Proper handling of 'OR' and 'AND' condition
          : ( Create your own array structure to be parsed in a way, that it should handle OR, AND conditions. By default, every condition would be AND.)
@@ -26,6 +29,7 @@ This is the db wrapper that will help to plain php programmer to interact with t
         : Should build the query which have been created by the above mentioned methods.
  - function query (string $query)
         : Can directly pass the query as a string and should return the proper result set. Also, every select type query should use this method.
+   //give the condition same as in where clause
  - function save (string $tableName , array $setParameters , null | array $conditions)
        : This method should perform the Insert as well as the update operations on to the database. Update would rely on the third parameter being passed or not.
  - function delete (string $tableName , null | array $conditions)

@@ -36,7 +36,7 @@ class SaggyDbWrapper {
     }
 
     public function select($fields = '*') {
-
+        $this->query = "";
         $fieldsString = $fields;
         if (is_array($fields)) {
             $fieldsString = join(",", $fields);
@@ -69,7 +69,6 @@ class SaggyDbWrapper {
         $counter = 0;
         if (!empty($conditions)) {
             if (is_array($conditions)) {
-                print_r($conditions);
                 foreach ($conditions as $key => $value) {
                     if (strtoupper($key) == "OR") {
                         $innerCounter = 0;
@@ -78,7 +77,8 @@ class SaggyDbWrapper {
                                 $whereString .= "";
                             else
                                 $whereString .= " OR ";
-                            $whereString .= $orKey . '="' . $orValue . '"';
+
+                            $whereString .= $this->handleArithmeticConditions($orKey, $orValue);
                             $innerCounter++;
 
                         }
@@ -87,7 +87,7 @@ class SaggyDbWrapper {
                             $whereString .= "";
                         else
                             $whereString .= " AND ";
-                        $whereString .= $key . '="' . $value . '"';
+                        $whereString .= $this->handleArithmeticConditions($key, $value);
                     }
                     $counter++;
                 }
@@ -98,6 +98,18 @@ class SaggyDbWrapper {
             $this->query .= $whereString . " ";
         }
         return $this;
+    }
+
+    public function handleArithmeticConditions($key, $value) {
+        $op = explode(",", $key);
+         if (sizeof($op) == 2) {
+            $whereString = $op[0] . $op[1] . '"' . $value . '"';
+        } elseif (strpos($value, ".") == false) {
+            $whereString = $key . '="' . $value . '"';
+        } else {
+            $whereString = $key . '=' . $value;
+        }
+        return $whereString;
     }
 
     public function  limit($limit, $offset) {
@@ -130,6 +142,7 @@ class SaggyDbWrapper {
     }
 
     public function getQuery() {
+        print "\n".$this->query."\n";
         return $this->query;
     }
 
@@ -141,13 +154,9 @@ class SaggyDbWrapper {
 
                 if (is_array($setParameters)) {
                     $keys = join(",", array_keys($setParameters));
-                    $values = "";
-                    foreach (array_values($setParameters) as $key => $val) {
-                        if ($key == sizeof($setParameters) - 1)
-                            $values .= "'" . $val . "'";
-                        else
-                            $values .= "'" . $val . "',";
-                    }
+
+                    $values = $this->formatter($setParameters);
+
                     $params = "(" . $keys . ") VALUES (" . $values . ")";
                 } else {
                     $params = $setParameters;
@@ -155,23 +164,19 @@ class SaggyDbWrapper {
                 $this->query = "INSERT INTO " . $tableName . " " . $params;
             } else {
                 $condition = "Where ";
-                $cnt = 0;
                 if (is_array($setParameters)) {
-                    foreach ($setParameters as $key => $val) {
-                        if ($cnt++ == sizeof($setParameters) - 1)
-                            $params .= $key . "='" . $val . "' ";
-                        else
-                            $params .= $key . "='" . $val . "',";
-                    }
+                    $params = $this->formatter($setParameters);
                 } else {
                     $params = $setParameters;
                 }
                 $cndCnt = 0;
+
                 foreach ($conditions as $key => $val) {
-                    if ($cndCnt++ == sizeof($conditions) - 1)
-                        $condition .= $key . "='" . $val . "' ";
-                    else
-                        $condition .= $key . "='" . $val . "',";
+                    $condition .= $this->handleArithmeticConditions($key,$val);
+//                    if ($cndCnt++ == sizeof($conditions) - 1)
+//                        $condition .= $key . "='" . $val . "' ";
+//                    else
+//                        $condition .= $key . "='" . $val . "',";
                 }
                 $this->query = "UPDATE " . $tableName . " SET " . $params . ' ' . $condition;
             }
@@ -204,15 +209,24 @@ class SaggyDbWrapper {
             $this->query = "DROP TABLE " . $tableName;
 
         }
-        try{
-        $pdoStmt = self::$pdo->prepare($this->query);
-        $pdoStmt->execute();
-        }catch(Exception $e){
+        try {
+            $pdoStmt = self::$pdo->prepare($this->query);
+            $pdoStmt->execute();
+        } catch (Exception $e) {
             throw new Exception($e);
 
         }
         return true;
     }
+
+    public function groupBy($field=""){
+        if(!empty($field)){
+            $this->query .="GROUP BY ".$field;
+        }
+        return $this;
+    }
+
+
 }
 
 ?>
