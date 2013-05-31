@@ -92,6 +92,18 @@ print "#delete all users who lives in city City7";
 $isDeleted = $dbObj->delete('users',array('city'=>'City7'));
 $dbObj->getQuery();
 
+
+//List all organizations who has id between 10 to 50 and its orders should be descending by name
+print "#List all organizations who has id between 10 to 50 and its orders should be descending by name";
+$org =$dbObj->select()
+    ->from('organizations')
+    ->where(array('id>'=>10,'id<'=>50))
+    ->orderBy('name')
+    ->get();
+
+$dbObj->getQuery();
+print_r($org);
+
 //
 //
 //print_r($result->getQuery());
