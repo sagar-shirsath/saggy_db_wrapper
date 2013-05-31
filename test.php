@@ -22,7 +22,7 @@ $grOrgList =$dbObj->select('name')
 $dbObj->getQuery();
 print_r($grOrgList);
 
-// List Organization whose id is greater than 10 and less than equal to 50
+    //List Organization whose id is greater than 10 and less than equal to 50
 print '#List Organization whose id is greater than 10 and less than equal to 50';
 $grOrgList =$dbObj->select('name')
     ->from('organizations')
@@ -40,7 +40,7 @@ $grOrgList =$dbObj->select('name')
 $dbObj->getQuery();
 print_r($grOrgList);
 
-// display informations about organization whose id is 70
+ //display informations about organization whose id is 70
 print "# display informations about organization whose id is 70";
 $org =$dbObj->select()
     ->from('organizations')
@@ -97,24 +97,13 @@ $dbObj->getQuery();
 print "#List all organizations who has id between 10 to 50 and its orders should be descending by name";
 $org =$dbObj->select()
     ->from('organizations')
-    ->where(array('id>'=>10,'id<'=>50))
+    ->where(array('id,>'=>10,'id,<'=>50))
     ->orderBy('name')
     ->get();
 
 $dbObj->getQuery();
 print_r($org);
+//
 
-//
-//
-//print_r($result->getQuery());
-//
-//print $query->getQuery();
-//print "\n";
-//$result = $query->get();
-
-//$insert = $dbObj->save('users',array('fname'=>'Sagar2','lname'=>'Shirsath2','organisation_id'=>2),array('id'=>1));
-//$insert = $dbObj->save('users',array('fname'=>'Sagar3','lname'=>'Shirsath3','organisation_id'=>2));
-//$delete = $dbObj->delete('users',array('id'=>45,'lname'=>'lname3'));
-//print_r($delete);
 ?>
 

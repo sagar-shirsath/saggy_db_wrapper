@@ -3,12 +3,15 @@
 require_once "config.php";
 
 class SaggyDbWrapper {
+
+    private $query;
+    private $params;
+    private $cnt=0;
     private static $hostName;
     private static $userName;
     private static $password;
     private static $databaseName;
     private static $pdo;
-    private $query;
     private static $instance;
 
     function __construct() {
@@ -37,6 +40,7 @@ class SaggyDbWrapper {
 
     public function select($fields = '*') {
         $this->query = "";
+        $this->params = array();
         $fieldsString = $fields;
         if (is_array($fields)) {
             $fieldsString = join(",", $fields);
@@ -101,14 +105,18 @@ class SaggyDbWrapper {
     }
 
     public function handleArithmeticConditions($key, $value) {
+
         $op = explode(",", $key);
-         if (sizeof($op) == 2) {
-            $whereString = $op[0] . $op[1] . '"' . $value . '"';
-        } elseif (strpos($value, ".") == false) {
-            $whereString = $key . '="' . $value . '"';
-        } else {
-            $whereString = $key . '=' . $value;
+        if (sizeof($op) == 2) {
+            $whereString = $op[0] . " " . $op[1] . ':' . $op[0].$this->cnt." ";
+            $this->params[":" . $op[0].$this->cnt] =$value;
+        } elseif(strpos($key,".")) {
+            $whereString = $key. '= ' . $value;
+        }else{
+            $whereString = $key . '= :' . $key.$this->cnt." ";
+            $this->params[":" . $key.$this->cnt] = $value;
         }
+        $this->cnt++;
         return $whereString;
     }
 
@@ -125,11 +133,9 @@ class SaggyDbWrapper {
     }
 
     public function get() {
-        $result = array();
-        $pdoStmt = self::$pdo->query($this->query);
-        if (!empty($pdoStmt)) {
-            $result = $pdoStmt->fetchAll(PDO::FETCH_ASSOC);
-        }
+        $prepStmt = self::$pdo->prepare($this->query);
+        $prepStmt->execute($this->params);
+        $result =  $prepStmt->fetchAll(PDO::FETCH_ASSOC);
         return $result;
     }
 
@@ -142,22 +148,23 @@ class SaggyDbWrapper {
     }
 
     public function getQuery() {
-        print "\n".$this->query."\n";
+        print "\n" . $this->query . "\n";
         return $this->query;
     }
 
     public function save($tableName, $setParameters, $conditions = null) {
         $params = "";
         $this->query = "";
+        $this->params = array();
         if (!empty($tableName) or !empty($setParameters)) {
             if (empty($conditions)) {
 
                 if (is_array($setParameters)) {
                     $keys = join(",", array_keys($setParameters));
 
-                    $values = $this->formatter($setParameters);
+                    $values = $this->formatterSqlInjection($setParameters);
 
-                    $params = "(" . $keys . ") VALUES (" . $values . ")";
+                    $params = $values;
                 } else {
                     $params = $setParameters;
                 }
@@ -165,27 +172,37 @@ class SaggyDbWrapper {
             } else {
                 $condition = "Where ";
                 if (is_array($setParameters)) {
-                    $params = $this->formatter($setParameters);
+                    $values = $this->formatterSqlInjection($setParameters);
+                    $params = $values;
                 } else {
                     $params = $setParameters;
                 }
-                $cndCnt = 0;
-
                 foreach ($conditions as $key => $val) {
-                    $condition .= $this->handleArithmeticConditions($key,$val);
-//                    if ($cndCnt++ == sizeof($conditions) - 1)
-//                        $condition .= $key . "='" . $val . "' ";
-//                    else
-//                        $condition .= $key . "='" . $val . "',";
+                    $condition .= $this->handleArithmeticConditions($key, $val);
                 }
                 $this->query = "UPDATE " . $tableName . " SET " . $params . ' ' . $condition;
+
             }
             $pdoStmt = self::$pdo->prepare($this->query);
-            $pdoStmt->execute();
+            $pdoStmt->execute($this->params);
             return true;
 
         }
         return false;
+    }
+
+    function formatterSqlInjection($conditions, $separator = ",") {
+        $cndCnt = 0;
+        $condition = "";
+        foreach ($conditions as $key => $val) {
+            if ($cndCnt++ == sizeof($conditions) - 1)
+                $condition .= $key . " = :" . $key." ";
+            else
+                $condition .= $key . " = :" . $key." ".$separator;
+            $this->params[':' . $key] = $val;
+        }
+
+        return $condition;
     }
 
     function formatter($conditions, $separator = ",") {
@@ -219,9 +236,9 @@ class SaggyDbWrapper {
         return true;
     }
 
-    public function groupBy($field=""){
-        if(!empty($field)){
-            $this->query .="GROUP BY ".$field;
+    public function groupBy($field = "") {
+        if (!empty($field)) {
+            $this->query .= "GROUP BY " . $field;
         }
         return $this;
     }
