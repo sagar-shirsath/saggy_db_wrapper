@@ -9,7 +9,7 @@ This is the db wrapper that will help to plain php programmer to interact with t
  - Used PDO class to connect to the DB drivers.
  - Have proper exception handling
  - Handles SQL injections.
-
+# Add your database configuration in the config.php file
 # Methods :
  - function select (array $Fields)
          : It should accept either a single variable or an array.
